@@ -1,4 +1,4 @@
-# holiday_manager
+# Holiday Manager
 
 ## Introduction
 This is a repository containing all files pertaining to the Week 7 assessment for the Dev10 Development Program. We were tasked to develop a text-based holiday manager application for a marketing team using Python.
