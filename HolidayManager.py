@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
+from datetime import date
 import json
 import inspect
 import requests
@@ -10,33 +11,34 @@ import requests
 # Create class for holidays
 class Holiday:
     def __init__(self, name, date):
-        self._name = name
-        self._date = date
+        self.name = name
+        self.date = date
     
     @property
     def name(self):
-        return self._name
+        return self.name
     
     @name.setter
     def name(self, new_name, new_date):
-        self._name = new_name
-        self._date = new_date
+        self.name = new_name
+        self.date = new_date
 
     @name.deleter    
-    def name(self):
+    def name(self, name, date):
         self.name = None
         self.date = None
         print('Success: The holiday has been deleted.')
 
     def formatted(self):
-        return '{self.name} ({self.date})'
+        return '{} ({})'.format(self.name, self.date)
     
-# Import from holidays.json into a list
+# Import from holidays.json
 import json
-with open('holidays.json') as f:
+with open('holidays_updated.json') as f: # Using the updated JSON file for convenience
     data = json.load(f)
     for holiday in data['holidays']:
         Holiday = holiday['name'], holiday['date']
+        # print(Holiday) just to see all holidays
 
 # Print menu
 def menu():
@@ -58,10 +60,10 @@ def add():
     new_date = input('Enter Holiday Date (YYYY-MM-DD): ')
     try: # Check if date format is correct
         date_format = datetime.strptime(new_date, '%Y-%m-%d')
-        Holiday = new_name, new_date
+        # new_holiday = Holiday(new_name, new_date)
         print('Success: The holiday has been added. \n')
     except ValueError:
-        print ("Sorry, that is not the correct format. Please try again. \n")
+        print ('Sorry, that is not the correct format. Please try again. \n')
 
 # 2. Remove a Holiday
 def remove():
@@ -69,9 +71,9 @@ def remove():
     print(40 * '-')
     remove_holiday = input('Enter Holiday Name: ')
     if remove_holiday in Holiday:
-        del remove_holiday
+        print('some code')
     else:
-        print ("Sorry, that holiday is not found. Please try again. \n")
+        print ('Sorry, that holiday is not found. Please try again. \n')
 
 # 3. View Holidays
 def view():
@@ -81,16 +83,20 @@ def view():
     if year_option in range(2021, 2024):
         week_option = int(input('Which week? (Please enter a number between 1 and 52.) '))
         if week_option in range(1, 53):
-            # "Use a lambda function to print holidays for a specified week.""
-            # weekly_holidays = list(map(lambda name, date: '{name} ({date})'))
-            # I'm not necessarily putting this here, but I want to have it somewhere.
-            date_inputs = '{}-W{}'.format(year_option, week_option)
-            print(date_inputs)
-            week = datetime.strptime(date_inputs, '%G-W%V')
-            print(week)
-            # "If the current week is selected, ask if the user would like to see the weather forecast.""
-            # print('Would you like to see the weather forecast for this week?')
-            # weather_option = input('[Y/N] '.upper)
+            current_date = date(2021, 10, 4)
+            current_week = current_date.isocalendar().week
+            print(current_week)
+            if week_option == current_week:
+                print('Would you like to see the weather forecast for this week?')
+                weather_option = input('[Y/N] ').upper()
+                if weather_option == 'Y': # Show holidays with weather
+                    print('some code')
+                elif weather_option == 'N': # Show only holidays
+                    print('some code')
+                else:
+                    print('Sorry, that is not an option. Please try again. \n')
+            else: # Show only holidays
+                print('some code')
         else:
             print('Sorry, that is not an option. Please try again. \n')
     else:
@@ -101,7 +107,7 @@ def save():
     print('Save')
     print(40 * '-')
     print('Are you sure you want to save your changes?')
-    save_option = input('[Y/N] '.upper)
+    save_option = input('[Y/N] ').upper()
     if save_option == 'Y': # Save and return to menu
         print('Success: Your changes have been saved.')
         print('Returning to Menu... \n')
@@ -116,7 +122,7 @@ def exit():
     print('Exit')
     print(40 * '-')
     print('Are you sure you want to exit? Any changes you have made will be lost.')
-    exit_option = input('[Y/N] '.upper)
+    exit_option = input('[Y/N] ').upper()
     if exit_option == 'Y':
         print('Goodbye! \n')
         loop = False
