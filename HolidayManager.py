@@ -5,8 +5,23 @@ import json
 import inspect
 import requests
 
-# response = requests.get('https://api.weather.gov/gridpoints/TOP/87,64/forecast')
-# Open API from the NWS with forecast in Milwaukee
+# Open API from the NWS with forecast in Milwaukee, I'm still working on getting this
+response = requests.get('https://api.weather.gov/gridpoints/TOP/87,64/forecast')
+
+def jprint(obj):
+    text = json.dumps(obj, sort_keys = True, indent = 4)
+    print(text)
+
+weather_properties = response.json()['properties']
+# jprint(weather_properties)
+
+time_period = []
+
+for p in weather_properties:
+    sun = properties['periods']
+    time_period.append(sun)
+
+print(time_period)
 
 # Create class for holidays
 class Holiday:
