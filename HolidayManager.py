@@ -17,7 +17,7 @@ weather_properties = response.json()['properties']
 
 time_period = []
 
-for p in weather_properties:
+for p in weather_properties: # I am aware that this doesn't work.
     sun = properties['periods']
     time_period.append(sun)
 
