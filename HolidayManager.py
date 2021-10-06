@@ -1,6 +1,4 @@
-from dataclasses import dataclass, field
-from datetime import datetime
-from datetime import date
+from datetime import datetime, date, time, timedelta
 import json
 import inspect
 import requests
@@ -15,13 +13,13 @@ def jprint(obj):
 weather_properties = response.json()['properties']
 # jprint(weather_properties)
 
-time_period = []
+#time_period = []
 
-for p in weather_properties: # I am aware that this doesn't work.
-    sun = properties['periods']
-    time_period.append(sun)
+#for p in weather_properties:
+#    sun = properties['periods']
+#    time_period.append(sun)
 
-print(time_period)
+#print(time_period)
 
 # Create class for holidays
 class Holiday:
@@ -48,12 +46,11 @@ class Holiday:
         return '{} ({})'.format(self.name, self.date)
     
 # Import from holidays.json
-import json
 with open('holidays_updated.json') as f: # Using the updated JSON file for convenience
     data = json.load(f)
     for holiday in data['holidays']:
         Holiday = holiday['name'], holiday['date']
-        # print(Holiday) just to see all holidays
+        #print(Holiday)
 
 # Print menu
 def menu():
@@ -98,16 +95,18 @@ def view():
     if year_option in range(2021, 2024):
         week_option = int(input('Which week? (Please enter a number between 1 and 52.) '))
         if week_option in range(1, 53):
-            current_date = date(2021, 10, 4)
-            current_week = current_date.isocalendar().week
-            print(current_week)
+            current_date = datetime.today().isocalendar()[2] # Today's date
+            start_date = datetime.today() - timedelta(days = current_date) # Starting date (Sunday)
+            week_dates = [str((start_date + timedelta(days = i)).date()) for i in range(7)] # List dates of the current week
+            current_week = datetime.today().isocalendar()[1] # Current week in the year
             if week_option == current_week:
                 print('Would you like to see the weather forecast for this week?')
                 weather_option = input('[Y/N] ').upper()
                 if weather_option == 'Y': # Show holidays with weather
                     print('some code')
                 elif weather_option == 'N': # Show only holidays
-                    print('some code')
+                    results = list(filter(lambda d: d['date'] == week_dates, Holiday))
+                    print(results)
                 else:
                     print('Sorry, that is not an option. Please try again. \n')
             else: # Show only holidays
